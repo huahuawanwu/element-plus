@@ -1,6 +1,7 @@
 import {
   computed,
   defineComponent,
+  getCurrentInstance,
   inject,
   nextTick,
   onMounted,
@@ -72,6 +73,8 @@ const TabNav = defineComponent({
   setup(props, { expose, emit }) {
     const rootTabs = inject(tabsRootContextKey)
     if (!rootTabs) throwError(COMPONENT_NAME, `<el-tabs><tab-nav /></el-tabs>`)
+
+    const instance = getCurrentInstance()!
 
     const ns = useNamespace('tabs')
     const visibility = useDocumentVisibility()
@@ -260,7 +263,9 @@ const TabNav = defineComponent({
 
     useResizeObserver(el$, update)
 
-    onMounted(() => setTimeout(() => scrollToActiveTab(), 0))
+    onMounted(() => {
+      setTimeout(() => scrollToActiveTab(), 0)
+    })
     onUpdated(() => update())
 
     expose({
@@ -268,6 +273,7 @@ const TabNav = defineComponent({
       removeFocus,
       tabListRef: nav$,
       tabBarRef,
+      update: () => instance.update(),
     })
 
     return () => {
@@ -405,6 +411,7 @@ export type TabNavInstance = InstanceType<typeof TabNav> & {
   removeFocus: () => void
   tabListRef: HTMLDivElement | undefined
   tabBarRef: TabBarInstance | undefined
+  update: () => void
 }
 
 export default TabNav

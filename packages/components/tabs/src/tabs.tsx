@@ -198,6 +198,7 @@ const Tabs = defineComponent({
       currentName,
       registerPane,
       unregisterPane,
+      nav$,
     })
 
     expose({
@@ -231,23 +232,18 @@ const Tabs = defineComponent({
           </div>
         ) : null
 
-      const tabNav = () => {
-        const hasLabelSlot = panes.value.some((pane) => pane.slots.label)
-        return createVNode(
-          TabNav,
-          {
-            ref: nav$,
-            currentName: currentName.value,
-            editable: props.editable,
-            type: props.type,
-            panes: panes.value,
-            stretch: props.stretch,
-            onTabClick: handleTabClick,
-            onTabRemove: handleTabRemove,
-          },
-          { $stable: !hasLabelSlot }
-        )
-      }
+      const tabNav = () => (
+        <TabNav
+          ref={nav$}
+          currentName={currentName.value}
+          editable={props.editable}
+          type={props.type}
+          panes={panes.value}
+          stretch={props.stretch}
+          onTabClick={handleTabClick}
+          onTabRemove={handleTabRemove}
+        />
+      )
 
       const header = (
         <div

@@ -948,4 +948,38 @@ describe('Tabs.vue', () => {
     // Verify the model value has been updated
     expect(activeName.value).toBe('tab2')
   })
+
+  test('v-for w/ label slot', async () => {
+    const tabs = ref(['foo'])
+    const Comp = () =>
+      tabs.value.map((tab) => (
+        <TabPane>
+          {{
+            label: () => tab,
+          }}
+        </TabPane>
+      ))
+    const wrapper = mount(() => [
+      <Tabs>
+        {tabs.value.map((tab) => (
+          <TabPane>
+            {{
+              label: () => tab,
+            }}
+          </TabPane>
+        ))}
+      </Tabs>,
+      <Tabs>{Comp}</Tabs>,
+    ])
+
+    tabs.value = await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(['bar'])
+      })
+    })
+    await nextTick()
+    wrapper
+      .findAll('.el-tabs__item')
+      .forEach((item) => expect(item.text()).toBe('bar'))
+  })
 })
