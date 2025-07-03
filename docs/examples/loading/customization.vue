@@ -2,7 +2,7 @@
   <el-table
     v-loading="loading"
     element-loading-text="Loading..."
-    :element-loading-spinner="svg"
+    element-loading-spinner="el-icon-loading"
     element-loading-svg-view-box="-10, -10, 50, 50"
     element-loading-background="rgba(122, 122, 122, 0.8)"
     :data="tableData"
